@@ -1,12 +1,16 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Subscriptions Cleaner",
+  "name": "YouTube Sub Cleaner",
   "version": "1.0",
   "description": "Removes 'Most relevant' and 'Shorts' sections from YouTube subscriptions feed.",
+  "icons": {
+    "128": "icons/clean-yt.png"
+  },
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/feed/subscriptions"],
-      "js": ["content.js"],
+      "js": ["src/content.js"],
+      "type": "module",
       "run_at": "document_idle"
     }
   ]

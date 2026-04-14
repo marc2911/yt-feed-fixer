@@ -1,0 +1,32 @@
+name: Build Chrome Extension
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build extension
+        run: |
+          rm -rf build
+          mkdir build
+          cp -r src manifest.json icons build/
+          cd build
+          zip -r yt-cleaner.zip .
+
+      - name: Publish Latest Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: latest
+          name: Latest Build
+          files: build/yt-cleaner.zip
+          generate_release_notes: false
