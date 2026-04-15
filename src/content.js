@@ -1,42 +1,17 @@
 const LOG_PREFIX = "[YT Cleaner]";
 let lastUrl = location.href;
-let styleElement = null;
 
 function isSubscriptionsPage() {
   return location.pathname === "/feed/subscriptions";
 }
 
-function addCSS() {
-  if (styleElement) return;
-
-  styleElement = document.createElement("style");
-  styleElement.id = "yt-cleaner-style";
-
-  styleElement.textContent = `
-    ytd-rich-section-renderer {
-      display: none !important;
-    }
-  `;
-
-  document.head.appendChild(styleElement);
-
-  console.log(`${LOG_PREFIX} Hiding sections`);
-}
-
-function removeCSS() {
-  if (!styleElement) return;
-
-  styleElement.remove();
-  styleElement = null;
-
-  // console.log(`${LOG_PREFIX} Restoring sections`);
-}
-
 function handlePageChange() {
   if (isSubscriptionsPage()) {
-    addCSS();
+    console.log(`${LOG_PREFIX} Hiding sections`);
+    document.body.classList.add("yt-cleaner-active");
   } else {
-    removeCSS();
+    // console.log(`${LOG_PREFIX} Restoring sections`);
+    document.body.classList.remove("yt-cleaner-active");
   }
 }
 

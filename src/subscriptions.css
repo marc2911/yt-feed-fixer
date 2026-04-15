@@ -1,0 +1,24 @@
+.yt-cleaner-active {
+  /* Hide rich sections */
+  ytd-rich-section-renderer {
+    display: none !important;
+  }
+
+  @media (min-width: 1800px) {
+    ytd-rich-grid-renderer {
+      --ytd-rich-grid-items-per-row: 4 !important;
+    }
+  }
+
+  @media (min-width: 2200px) {
+    ytd-rich-grid-renderer {
+      --ytd-rich-grid-items-per-row: 5 !important;
+    }
+  }
+
+  @media (min-width: 2800px) {
+    ytd-rich-grid-renderer {
+      --ytd-rich-grid-items-per-row: 6 !important;
+    }
+  }
+}
