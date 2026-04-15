@@ -1,51 +1,65 @@
 const LOG_PREFIX = "[YT Cleaner]";
-let browseSection = null;
+let lastUrl = location.href;
+let styleElement = null;
 
-function findBrowseSection() {
-  browseSection = document.querySelector("ytd-browse");
+function isSubscriptionsPage() {
+  return location.pathname === "/feed/subscriptions";
 }
 
-function removeRichSections() {
-  if (!browseSection) {
-    findBrowseSection();
+function addCSS() {
+  if (styleElement) return;
+
+  styleElement = document.createElement("style");
+  styleElement.id = "yt-cleaner-style";
+
+  styleElement.textContent = `
+    ytd-rich-section-renderer {
+      display: none !important;
+    }
+  `;
+
+  document.head.appendChild(styleElement);
+
+  console.log(`${LOG_PREFIX} Hiding sections`);
+}
+
+function removeCSS() {
+  if (!styleElement) return;
+
+  styleElement.remove();
+  styleElement = null;
+
+  // console.log(`${LOG_PREFIX} Restoring sections`);
+}
+
+function handlePageChange() {
+  if (isSubscriptionsPage()) {
+    addCSS();
+  } else {
+    removeCSS();
   }
-
-  if (!browseSection) return;
-
-  const sections = browseSection.querySelectorAll("ytd-rich-section-renderer");
-  if (sections.length === 0) return;
-
-  console.log(`${LOG_PREFIX} Removing ${sections.length} sections...`);
-
-  sections.forEach((section) => section.remove());
 }
 
-function main() {
-  // Run once initially
-  removeRichSections();
-
-  // Watch for dynamically added content
+function watchUrlChanges() {
   const observer = new MutationObserver(() => {
-    removeRichSections();
+    if (location.href !== lastUrl) {
+      lastUrl = location.href;
+
+      // console.log(`${LOG_PREFIX} New Page: ${location.href}`);
+
+      handlePageChange();
+    }
   });
 
-  observer.observe(browseSection ?? document.body, {
+  observer.observe(document.body, {
     childList: true,
     subtree: true,
   });
 }
 
+function main() {
+  handlePageChange();
+  watchUrlChanges();
+}
+
 main();
-
-// var observer = null;
-// document.addEventListener("yt-navigate-finish", () => {
-//   console.log("YT navigation detected");
-
-//   if (observer) {
-//     observer.disconnect();
-//   }
-
-//   browse = null;
-
-//   main();
-// });
